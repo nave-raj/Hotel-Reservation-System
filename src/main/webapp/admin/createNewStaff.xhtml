@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../WEB-INF/templates/authenticatedTemplate.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="jakarta.faces.passthrough"
+                xmlns:f="jakarta.faces.core">
+
+    <ui:define name="title">
+       Create a New Staff
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <div class="mb-3">
+                <h:outputLabel styleClass="form-label" for="staffName" value="Staff Name"/>
+                <h:inputText id="staffName" styleClass="form-control w-50" value="#{staffSignUpController.staff.name}"/>
+                <h:message for="staffName" styleClass="text-danger"/>
+            </div>
+
+            <div class="mb-3">
+                <h:outputLabel styleClass="form-label" for="staffEmail" value="Staff Email"/>
+                <h:inputText id="staffEmail" styleClass="form-control w-50" value="#{staffSignUpController.staff.email}"/>
+                <h:message for="staffEmail" styleClass="text-danger"/>
+            </div>
+
+            <div class="mb-3">
+                <h:outputLabel styleClass="form-label" for="dateOfJoining" value="Date of Joining"/>
+                <h:inputText id="dateOfJoining" styleClass="form-control w-50" value="#{staffSignUpController.staff.dateOfJoining}" p:type="date">
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                </h:inputText>
+                <h:message for="dateOfJoining" styleClass="text-danger"/>
+            </div> 
+            <div class="mb-3">
+                <h:panelGroup layout="block" >
+                    <h:outputLabel styleClass="form-label" value="Hotel" for="hotel"/>
+                    <h:selectOneMenu 
+                        id="hotel"
+                        converter="hotelConverter"
+                        styleClass="form-control w-50"
+                        value="#{staffSignUpController.staff.hotel}">
+
+                        <f:selectItems var="hotel" 
+                                       value="#{hotelService.findAll()}"
+                                       itemLabel="#{hotel.name}"
+                                       itemValue="#{hotel}"/>
+                    </h:selectOneMenu>
+                    <h:message for="hotel" errorStyle="color: red" infoStyle="color: green"/>
+                </h:panelGroup>
+            </div>
+
+            <div class="mb-3">
+                <h:outputLabel styleClass="form-label" for="userName" value="Username"/>
+                <h:inputText id="userName" styleClass="form-control w-50" value="#{staffSignUpController.user.userName}"/>
+                <h:message for="userName" styleClass="text-danger"/>
+            </div>
+
+            <div class="mb-3">
+                <h:outputLabel styleClass="form-label" for="password" value="Password"/>
+                <h:inputSecret id="password" styleClass="form-control w-50" value="#{staffSignUpController.user.password}"/>
+                <h:message for="password" styleClass="text-danger"/>
+            </div>
+
+            <div class="d-grid">
+                <h:commandButton styleClass="btn btn-primary btn-lg w-50" value="Sign Up" action="#{staffSignUpController.saveStaff()}"/>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

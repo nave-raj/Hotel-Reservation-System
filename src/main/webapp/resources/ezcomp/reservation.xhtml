@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="jakarta.faces.passthrough"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="operation" required="true" type="java.lang.String" />
+        <cc:attribute name="reservation" type="edu.iit.sat.itmd4515.nkandasamyrajkumar.domain.Reservation" required="true" />
+        <cc:attribute name="action" required="false" method-signature="java.lang.String action()" />
+        <cc:attribute name="admin" required="false" default="false" type="java.lang.Boolean" />
+
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+
+        <h:form>
+
+            <div class="form-group mt-3">
+                <h:panelGroup layout="block" rendered="#{not cc.attrs.operation.equalsIgnoreCase('create')}">
+                    <h:outputLabel value="Reservation ID #{cc.attrs.reservation.id}" for="reservationId" />
+                    <h:inputHidden id="reservationId" value="#{cc.attrs.reservation.id}" />
+                    <h:message for="reservationId" errorStyle="color: red" infoStyle="color: green"/>
+                </h:panelGroup>
+            </div>
+
+            <div class="form-group mt-3">
+                <h:panelGroup layout="block">
+                    <h:outputLabel value="Guest ID #{cc.attrs.reservation.guest.id} #{cc.attrs.reservation.guest.name}" for="guestId" />
+                    <h:inputHidden id="guestId" value="#{cc.attrs.reservation.guest.id}" />
+                    <h:message for="guestId" errorStyle="color: red" infoStyle="color: green"/>
+                </h:panelGroup>
+            </div>
+            <div class="form-group mt-3">
+                <h:outputLabel value="Room Check In Date" for="checkInDate"/>
+                <h:inputText p:type="date" 
+                             id="checkInDate" 
+                             value="#{cc.attrs.reservation.checkInDate}"
+                             readonly="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete')}"
+                             styleClass="form-control">
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                </h:inputText>
+                <h:message for="checkInDate" errorStyle="color: red" infoStyle="color: green"/>
+            </div>
+            <div class="form-group mt-3">
+                <h:outputLabel value="Room Check Out Date" for="checkOutDate"/>
+                <h:inputText p:type="date" 
+                             id="checkOutDate" 
+                             value="#{cc.attrs.reservation.checkOutDate}"
+                             readonly="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete')}"
+                             styleClass="form-control">
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                </h:inputText>
+                <h:message for="checkOutDate" errorStyle="color: red" infoStyle="color: green"/>
+            </div>
+
+            <div class="form-group mt-3" >
+                <h:panelGroup layout="block">
+                    <h:outputLabel value="Room" for="room"/>
+                    <h:selectOneMenu 
+                        id="room"
+                        converter="roomConverter"
+                        readonly="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete') }"
+                        disabled="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete') }"
+                        value="#{cc.attrs.reservation.room}">
+
+                        <f:selectItems var="room" 
+                                       value="#{roomService.findAll()}"
+                                       itemLabel="#{room.roomNumber}"
+                                       itemValue="#{room}" />
+
+                    </h:selectOneMenu>
+                    <h:message for="room" errorStyle="color: red" infoStyle="color: green"/>
+                </h:panelGroup>
+            </div>
+
+            <div class="form-group mt-3">
+                <h:panelGroup layout="block" >
+                    <h:outputLabel value="Hotel" for="hotel"/>
+                    <h:selectOneMenu 
+                        id="hotel"
+                        converter="hotelConverter"
+                        readonly="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete')}"
+                        disabled="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete')}"
+                        value="#{cc.attrs.reservation.hotel}">
+
+                        <f:selectItems var="hotel" 
+                                       value="#{hotelService.findAll()}"
+                                       itemLabel="#{hotel.name}"
+                                       itemValue="#{hotel}" />
+                    </h:selectOneMenu>
+                    <h:message for="hotel" errorStyle="color: red" infoStyle="color: green"/>
+                </h:panelGroup>
+            </div>
+
+            <h:commandButton 
+                rendered="#{cc.attrs.operation.equalsIgnoreCase('create')}"
+                value="Schedule Reservation" 
+                styleClass="btn btn-primary mt-3"
+                action="#{cc.attrs.action}" />
+            <h:commandButton 
+                rendered="#{cc.attrs.operation.equalsIgnoreCase('edit')}"
+                value="Modify Reservation" 
+                styleClass="btn btn-primary mt-3"
+                action="#{cc.attrs.action}" />
+            <h:commandButton 
+                rendered="#{cc.attrs.operation.equalsIgnoreCase('delete')}"
+                value="Delete Reservation"
+                styleClass="btn btn-primary mt-3"
+                action="#{cc.attrs.action}" />
+        </h:form>
+    </cc:implementation>
+</html>

@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./WEB-INF/templates/publicTemplate.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="jakarta.faces.passthrough"
+                xmlns:f="jakarta.faces.core">
+
+    <ui:define name="title">
+        Guest Sign Up Page
+    </ui:define>
+
+    <ui:define name="content">
+        <main class="form-login w-100 m-auto">
+            <h:form>
+                <div class="mb-3">
+                    <h:outputLabel styleClass="form-label" for="guestName" value="Guest Name"/>
+                    <h:inputText id="guestName" styleClass="form-control" value="#{guestSignUpController.guest.name}"/>
+                    <h:message for="guestName" styleClass="text-danger"/>
+                </div>
+
+                <div class="mb-3">
+                    <h:outputLabel styleClass="form-label" for="guestEmail" value="Guest Email"/>
+                    <h:inputText id="guestEmail" styleClass="form-control" value="#{guestSignUpController.guest.email}"/>
+                    <h:message for="guestEmail" styleClass="text-danger"/>
+                </div>
+
+                <div class="mb-3">
+                    <h:outputLabel styleClass="form-label" for="dateOfBirth" value="Date of Birth"/>
+                    <h:inputText id="dateOfBirth" styleClass="form-control" value="#{guestSignUpController.guest.dateOfBirth}" p:type="date">
+                        <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                    </h:inputText>
+                    <h:message for="dateOfBirth" styleClass="text-danger"/>
+                </div>    
+
+                <div class="mb-3">
+                    <h:outputLabel styleClass="form-label" for="userName" value="Username"/>
+                    <h:inputText id="userName" styleClass="form-control" value="#{guestSignUpController.user.userName}"/>
+                    <h:message for="userName" styleClass="text-danger"/>
+                </div>
+
+                <div class="mb-3">
+                    <h:outputLabel styleClass="form-label" for="password" value="Password"/>
+                    <h:inputSecret id="password" styleClass="form-control" value="#{guestSignUpController.user.password}"/>
+                    <h:message for="password" styleClass="text-danger"/>
+                </div>
+
+                <div class="d-grid">
+                    <h:commandButton styleClass="btn btn-primary btn-lg" value="Sign Up" action="#{guestSignUpController.saveGuest()}"/>
+                    <h:link outcome="/login.xhtml" styleClass="mt-3" value="Already Have an Account? Go to Login Page" />
+                </div>
+            </h:form>
+        </main>
+    </ui:define>
+
+</ui:composition>

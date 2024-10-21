@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./WEB-INF/templates/publicTemplate.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="jakarta.faces.passthrough">
+
+    <ui:define name="title">
+        Login Page
+    </ui:define>
+
+    <ui:define name="content">
+        <main class="form-login w-100 m-auto">
+            <h:form>
+
+                <h:panelGroup styleClass="form-floating" layout="block">
+                    <h:inputText 
+                        id="userName"
+                        binding="#{uname}"
+                        value="#{loginController.user.userName}" 
+                        styleClass="#{uname.valid ? 'form-control' : 'form-control is-invalid'}"
+                        p:placeholder="Enter Username"/>
+                    <h:message for="userName" errorStyle="color: red" infoStyle="color: green"/>
+                    <h:outputLabel value="User Name" for="userName" />
+                </h:panelGroup>
+
+
+                <h:panelGroup styleClass="form-floating mb-3" layout="block">
+                    <h:inputSecret 
+                        id="password" 
+                        value="#{loginController.user.password}" 
+                        binding="#{pwd}"
+                        styleClass="#{pwd.valid ? 'form-control' : 'form-control is-invalid'}" 
+                        p:placeholder="Enter Password"/>
+                    <h:outputLabel value="Password" for="password" />
+                    <h:outputLabel value="Password" for="password" />
+                    <h:message for="password" errorStyle="color: red" infoStyle="color: green"/>
+                </h:panelGroup>
+
+
+                <h:commandButton value="Login" action="#{loginController.doLogin()}" styleClass="btn btn-primary w-100 py-2 mb-3" />
+                <h:link outcome="/signUp.xhtml" styleClass="mt-3" value="New Guest? Sign Up" />
+
+            </h:form>
+        </main>
+    </ui:define>
+
+</ui:composition>

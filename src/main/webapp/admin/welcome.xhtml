@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../WEB-INF/templates/authenticatedTemplate.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core">
+
+    <ui:define name="title">
+        Admin
+    </ui:define>
+
+    <ui:define name="content">
+        Welcome #{loginController.authenticatedUser}! to the Admin Section of the Hotel Reservation Application
+        <div class="mt-3">
+            <h:link styleClass="btn btn-primary" outcome="/admin/createNewStaff.xhtml" value="Create a New Staff"/>   
+        </div>
+        <div class="mt-3">
+            <h3>List of all the Staffs in the Hotel</h3>
+        </div>
+        <h:dataTable 
+            styleClass="table table-striped table-hover"
+            value="#{staffService.findAll()}" 
+            var="staff">
+            <h:column>
+                <f:facet name="header">Staff ID</f:facet>
+                <h:outputText value="#{staff.id}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Staff Name</f:facet>
+                <h:outputText value="#{staff.name}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Staff Email</f:facet>
+                <h:outputText value="#{staff.email}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Staff Date of Joining</f:facet>
+                <h:outputText value="#{staff.dateOfJoining}">
+                </h:outputText>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Staff Username</f:facet>
+                <h:outputText value="#{staff.user.userName}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Assigned Hotel</f:facet>
+                <h:outputText value="#{staff.hotel.name}"/>
+            </h:column>
+        </h:dataTable>
+        <div class="mt-3">
+            <h3>List of all the Guest in the Hotel</h3>
+        </div>
+        <h:dataTable 
+            styleClass="table table-striped table-hover"
+            value="#{guestService.findAll()}" 
+            var="guest">
+            <h:column>
+                <f:facet name="header">Guest ID</f:facet>
+                <h:outputText value="#{guest.id}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Guest Name</f:facet>
+                <h:outputText value="#{guest.name}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Guest Email</f:facet>
+                <h:outputText value="#{guest.email}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Guest Date of Birth</f:facet>
+                <h:outputText value="#{guest.dateOfBirth}">
+                </h:outputText>
+            </h:column>
+        </h:dataTable>
+
+
+    </ui:define>
+
+</ui:composition>

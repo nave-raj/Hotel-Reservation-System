@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="jakarta.faces.passthrough"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="operation" required="true" type="java.lang.String" />
+        <cc:attribute name="room" type="edu.iit.sat.itmd4515.nkandasamyrajkumar.domain.Room" required="true" />
+        <cc:attribute name="action" required="false" method-signature="java.lang.String action()" />
+        <cc:attribute name="role" required="false" type="java.lang.String" />
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+
+        <h:form>
+            <h:panelGroup layout="block" styleClass="mt-3" rendered="#{not cc.attrs.operation.equalsIgnoreCase('create')}">
+                <h:outputLabel value="Room ID #{cc.attrs.room.id}" for="roomId" />
+                <h:inputHidden id="roomId" value="#{cc.attrs.room.id}" />
+                <h:message for="roomId" errorStyle="color: red" infoStyle="color: green"/>
+            </h:panelGroup>
+
+            <h:panelGroup layout="block" styleClass="mt-3" rendered="#{not cc.attrs.role.equalsIgnoreCase('guest')}">
+                <h:outputLabel value="Room Number" for="roomNumber" />
+                <h:inputText id="roomNumber" 
+                             value="#{cc.attrs.room.roomNumber}"
+                             readonly="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete')}"
+                             styleClass="form-control" />
+                <h:message for="roomNumber" errorStyle="color: red" infoStyle="color: green"/>
+            </h:panelGroup>
+
+            <h:panelGroup layout="block" styleClass="mt-3" rendered="#{not cc.attrs.role.equalsIgnoreCase('guest')}">
+
+                <h:outputLabel value="Room cost Per Night" for="costPerNight" />
+                <h:inputText id="costPerNight" 
+                             value="#{cc.attrs.room.costPerNight}"
+                             readonly="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete') or cc.attrs.role.equalsIgnoreCase('guest')}"
+                             styleClass="form-control" />
+                <h:message for="costPerNight" errorStyle="color: red" infoStyle="color: green"/>
+            </h:panelGroup>
+
+
+            <h:panelGroup layout="block" styleClass="mt-3" rendered="#{cc.attrs.role.equalsIgnoreCase('guest')}">
+                <h:outputLabel value="Room Number" styleClass="form-label" for="room"/>
+                <h:selectOneMenu 
+                    id="room"
+                    converter="roomConverter"
+                    readonly="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete')}"
+                    disabled="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete')}"
+                    styleClass="form-control w-50"
+                    value="#{cc.attrs.room}">
+
+                    <f:selectItems var="room" 
+                                   value="#{roomService.findAll()}"
+                                   itemLabel="#{room.roomNumber}"
+                                   itemValue="#{room}" />
+
+                </h:selectOneMenu>
+                <h:message for="room" errorStyle="color: red" infoStyle="color: green"/>
+            </h:panelGroup>
+
+
+            <h:panelGroup layout="block" styleClass="mt-3" rendered="#{not cc.attrs.role.equalsIgnoreCase('guest')}">
+                <h:outputLabel value="Room floor" for="floor" />
+                <h:inputText id="floor" 
+                             value="#{cc.attrs.room.floor}"
+                             readonly="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete')}"
+                             styleClass="form-control" />
+                <h:message for="floor" errorStyle="color: red" infoStyle="color: green"/>
+            </h:panelGroup>
+
+            <h:panelGroup layout="block" styleClass="mt-3" rendered="#{not cc.attrs.role.equalsIgnoreCase('guest')}">
+                <h:outputLabel value="Room Occupancy" for="occupancy" />
+                <h:inputText id="occupancy" 
+                             value="#{cc.attrs.room.maximumOccupancy}"
+                             readonly="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete')}"
+                             styleClass="form-control" />
+                <h:message for="occupancy" errorStyle="color: red" infoStyle="color: green"/>
+            </h:panelGroup>
+
+            <h:panelGroup layout="block" styleClass="mt-3" rendered="#{not cc.attrs.role.equalsIgnoreCase('guest')}">
+
+                <h:outputLabel value="Room Type" for="roomType"/>
+                <h:selectOneMenu id="roomType" 
+                                 value="#{cc.attrs.room.roomType}"
+                                 disabled="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete') }"
+                                 styleClass="form-control">
+                    <f:selectItems var="roomType" 
+                                   value="#{staffRoomController.allRoomTypesForForm}"
+                                   itemLabel="#{roomType.label}"
+                                   itemValue="#{roomType}" />
+                </h:selectOneMenu>
+                <h:message for="roomType" errorStyle="color: red" infoStyle="color: green"/>
+            </h:panelGroup>
+
+            <h:panelGroup layout="block" styleClass="mt-3" rendered="#{not cc.attrs.role.equalsIgnoreCase('guest')}">
+                <h:outputLabel value="Room Last Maintenance Date" for="roomLastMaintenanceDate"/>
+                <h:inputText p:type="date" 
+                             id="petBirthDate" 
+                             value="#{cc.attrs.room.lastMaintenanceDate}"
+                             readonly="#{cc.attrs.operation.equalsIgnoreCase('view') or cc.attrs.operation.equalsIgnoreCase('delete')}"
+                             styleClass="form-control">
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                </h:inputText>
+                <h:message for="roomLastMaintenanceDate" errorStyle="color: red" infoStyle="color: green"/>
+            </h:panelGroup>
+
+            <h:commandButton 
+                rendered="#{cc.attrs.operation.equalsIgnoreCase('create')}"
+                styleClass="btn btn-primary mt-3"
+                value="Create a New Room" 
+                action="#{cc.attrs.action}" />
+            <h:commandButton 
+                rendered="#{cc.attrs.operation.equalsIgnoreCase('book')}"
+                styleClass="btn btn-primary mt-3"
+                value="Book a New Room" 
+                action="#{cc.attrs.action}" />
+            <h:commandButton 
+                rendered="#{cc.attrs.operation.equalsIgnoreCase('edit')}"
+                styleClass="btn btn-primary mt-3"
+                value="Edit Room" 
+                action="#{cc.attrs.action}" />
+
+            <h:commandButton 
+                rendered="#{cc.attrs.operation.equalsIgnoreCase('delete')}"
+                styleClass="btn btn-primary mt-3"
+                value="Delete Room" 
+                action="#{cc.attrs.action}" />
+        </h:form>
+    </cc:implementation>
+</html>

@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../WEB-INF/templates/authenticatedTemplate.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core">
+
+    <ui:define name="title">
+        Staff
+    </ui:define>
+
+    <ui:define name="content">
+         Welcome #{loginController.authenticatedUser}! to the Staff Section of the Hotel Reservation Application
+         <div class="mt-3">
+             <h3>Staff Information</h3>
+         </div>
+         <h:dataTable 
+            styleClass="table table-striped table-hover mt-3"
+            value="#{staffWelcomeController.staff}" 
+            var="staff">
+            <h:column>
+                <f:facet name="header">Staff ID</f:facet>
+                <h:outputText value="#{staff.id}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Staff Name</f:facet>
+                <h:outputText value="#{staff.name}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Staff Email</f:facet>
+                <h:outputText value="#{staff.email}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Staff  Date Of Joining</f:facet>
+                <h:outputText value="#{staff.dateOfJoining}"/>
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header">Assigned Hotel ID</f:facet>
+                <h:outputText value="#{staff.hotel.id}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Assigned Hotel Name</f:facet>
+                <h:outputText value="#{staff.hotel.name}"/>
+            </h:column>
+        </h:dataTable>
+        <br/>
+        
+        <div class="d-flex justify-content-between mt-3">
+            <div>
+                <h3>Here is the list of all the rooms</h3>
+            </div>
+            <div class="ml-auto">
+                <h:link outcome="/staff/createNewRoom.xhtml" value="Create a New Room" styleClass="btn btn-lg btn-dark text-white" />
+            </div>
+        </div>
+        <h:dataTable 
+            styleClass="table table-striped table-hover mt-3"
+            value="#{roomService.findAll()}" 
+            var="room">
+            <h:column>
+                <f:facet name="header">Room ID</f:facet>
+                <h:outputText value="#{room.id}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Room Number</f:facet>
+                <h:outputText value="#{room.roomNumber}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Room Type</f:facet>
+                <h:outputText value="#{room.roomType.label}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Room Cost Per Night</f:facet>
+                <h:outputText value="#{room.costPerNight}">
+                </h:outputText>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Room Maximum Occupancy</f:facet>
+                <h:outputText value="#{room.maximumOccupancy}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Last Maintenance Date</f:facet>
+                <h:outputText value="#{room.lastMaintenanceDate}">
+                    <f:convertDateTime type="localDate" dateStyle="full"/>
+                </h:outputText>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">No. of Guests</f:facet>
+                <h:outputText value="#{room.guests.size()}"/>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Guests</f:facet>
+                <ui:repeat value="#{room.guests}" var="guest">
+                    <h:outputText value="#{guest.name} "/>
+                </ui:repeat>
+            </h:column>
+
+            <h:column>
+                <h:form>
+                    <h:commandButton value="view" styleClass="btn btn-primary m-1" action="#{staffRoomController.displayBookedRoomPage(room)}"/>
+                    <h:commandButton value="edit" styleClass="btn btn-primary m-1" action="#{staffRoomController.displayEditRoomPage(room)}"/>
+                    <h:commandButton value="delete" styleClass="btn btn-primary m-1" action="#{staffRoomController.displayDeleteRoomPage(room)}"/>
+
+                </h:form>
+            </h:column>
+
+        </h:dataTable>
+
+    </ui:define>
+
+</ui:composition>
